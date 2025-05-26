@@ -12,6 +12,7 @@ import {
   FolderOpen,
   Code2,
   Palette,
+  Workflow,
   Zap,
   MessageSquare,
   Plug,
@@ -48,6 +49,12 @@ const navigation = [
     badge: null,
   },
   {
+    name: "Workflows",
+    href: "/workflows",
+    icon: Workflow,
+    badge: "New",
+  },
+  {
     name: "Automation",
     href: "/automation",
     icon: Zap,
@@ -69,7 +76,7 @@ const navigation = [
     name: "Collaboration",
     href: "/collaboration",
     icon: Users,
-    badge: "New",
+    badge: null,
   },
 ]
 

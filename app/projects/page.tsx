@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ProjectCreationModal } from "@/components/projects/project-creation-modal"
+import { EnhancedProjectCreation } from "@/components/projects/enhanced-project-creation"
+import { ObjectChatModal } from "@/components/shared/object-chat-modal"
 import {
   Search,
   Filter,
@@ -21,14 +22,15 @@ import {
   Trash2,
   Eye,
   Code2,
-  Palette,
-  Zap,
   Globe,
   Smartphone,
   Database,
   Clock,
   CheckCircle,
   AlertCircle,
+  MessageSquare,
+  Bot,
+  SearchIcon,
 } from "lucide-react"
 
 const initialProjects = [
@@ -36,30 +38,37 @@ const initialProjects = [
     id: "1",
     name: "E-commerce Dashboard",
     description: "Modern e-commerce platform with analytics and inventory management",
-    template: "react-app",
+    category: "app",
+    template: "web-app",
     status: "active",
     progress: 85,
     lastModified: "2 hours ago",
     collaborators: ["JD", "JS", "MJ"],
     framework: "React 18",
     features: ["Authentication", "Database", "Analytics"],
+    categoryIcon: Globe,
+    categoryColor: "bg-blue-500",
   },
   {
     id: "2",
-    name: "Task Automation Bot",
-    description: "Automated email categorization and response system",
-    template: "automation",
-    status: "running",
-    progress: 100,
-    lastModified: "30 minutes ago",
-    collaborators: ["JD"],
-    framework: "Node.js",
-    features: ["AI Processing", "Email Integration"],
+    name: "Market Research Analysis",
+    description: "Competitive analysis and market insights for fintech sector",
+    category: "research",
+    template: "market-research",
+    status: "active",
+    progress: 60,
+    lastModified: "1 hour ago",
+    collaborators: ["JD", "JS"],
+    framework: "Python",
+    features: ["Data Collection", "Analysis", "Visualization"],
+    categoryIcon: SearchIcon,
+    categoryColor: "bg-purple-500",
   },
   {
     id: "3",
     name: "Mobile Banking App",
     description: "Secure mobile banking application with biometric authentication",
+    category: "app",
     template: "mobile-app",
     status: "draft",
     progress: 45,
@@ -67,27 +76,25 @@ const initialProjects = [
     collaborators: ["JS", "MJ"],
     framework: "React Native",
     features: ["Authentication", "Security", "Real-time Updates"],
+    categoryIcon: Smartphone,
+    categoryColor: "bg-blue-500",
+  },
+  {
+    id: "4",
+    name: "Customer Support Bot",
+    description: "AI-powered chatbot for customer service automation",
+    category: "agent",
+    template: "chatbot",
+    status: "running",
+    progress: 90,
+    lastModified: "30 minutes ago",
+    collaborators: ["JD"],
+    framework: "Node.js",
+    features: ["NLP", "Context Memory", "Multi-channel"],
+    categoryIcon: Bot,
+    categoryColor: "bg-orange-500",
   },
 ]
-
-const getTemplateIcon = (template: string) => {
-  switch (template) {
-    case "react-app":
-      return Code2
-    case "nextjs-app":
-      return Globe
-    case "mobile-app":
-      return Smartphone
-    case "automation":
-      return Zap
-    case "dashboard":
-      return Database
-    case "design-system":
-      return Palette
-    default:
-      return Code2
-  }
-}
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -126,7 +133,7 @@ const getStatusIcon = (status: string) => {
 export default function ProjectsPage() {
   const [projects, setProjects] = useState(initialProjects)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filterStatus, setFilterStatus] = useState("all")
+  const [filterCategory, setFilterCategory] = useState("all")
 
   const handleProjectCreate = (newProject: any) => {
     setProjects((prev) => [newProject, ...prev])
@@ -159,8 +166,8 @@ export default function ProjectsPage() {
     const matchesSearch =
       project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       project.description.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesFilter = filterStatus === "all" || project.status === filterStatus
-    return matchesSearch && matchesFilter
+    const matchesCategory = filterCategory === "all" || project.category === filterCategory
+    return matchesSearch && matchesCategory
   })
 
   return (
@@ -171,7 +178,7 @@ export default function ProjectsPage() {
           <h1 className="text-3xl font-bold">Projects</h1>
           <p className="text-muted-foreground">Manage and organize all your development projects</p>
         </div>
-        <ProjectCreationModal onProjectCreate={handleProjectCreate} />
+        <EnhancedProjectCreation onProjectCreate={handleProjectCreate} />
       </div>
 
       {/* Stats */}
@@ -245,15 +252,16 @@ export default function ProjectsPage() {
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
               <Filter className="w-4 h-4 mr-2" />
-              {filterStatus === "all" ? "All Status" : filterStatus}
+              {filterCategory === "all" ? "All Categories" : filterCategory}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => setFilterStatus("all")}>All Status</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setFilterStatus("active")}>Active</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setFilterStatus("running")}>Running</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setFilterStatus("draft")}>Draft</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setFilterStatus("paused")}>Paused</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFilterCategory("all")}>All Categories</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFilterCategory("app")}>Applications</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFilterCategory("research")}>Research</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFilterCategory("component")}>Components</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFilterCategory("agent")}>AI Agents</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setFilterCategory("functions")}>Functions</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -261,15 +269,15 @@ export default function ProjectsPage() {
       {/* Projects Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredProjects.map((project) => {
-          const TemplateIcon = getTemplateIcon(project.template)
+          const CategoryIcon = project.categoryIcon
 
           return (
             <Card key={project.id} className="hover:shadow-md transition-shadow">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
-                      <TemplateIcon className="w-5 h-5 text-blue-600" />
+                    <div className={`w-10 h-10 rounded-lg ${project.categoryColor} flex items-center justify-center`}>
+                      <CategoryIcon className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <CardTitle className="text-lg">{project.name}</CardTitle>
@@ -279,6 +287,9 @@ export default function ProjectsPage() {
                           {getStatusIcon(project.status)}
                           <span className="capitalize">{project.status}</span>
                         </div>
+                        <Badge variant="outline" className="text-xs">
+                          {project.category}
+                        </Badge>
                       </div>
                     </div>
                   </div>
@@ -358,6 +369,24 @@ export default function ProjectsPage() {
                     )}
                   </div>
                 </div>
+
+                <div className="flex items-center space-x-2 pt-2">
+                  <ObjectChatModal
+                    objectType="project"
+                    objectName={project.name}
+                    objectId={project.id}
+                    trigger={
+                      <Button variant="outline" size="sm">
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Chat
+                      </Button>
+                    }
+                  />
+                  <Button variant="outline" size="sm">
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           )
@@ -371,7 +400,7 @@ export default function ProjectsPage() {
           <p className="text-muted-foreground mb-4">
             {searchQuery ? "Try adjusting your search terms" : "Create your first project to get started"}
           </p>
-          {!searchQuery && <ProjectCreationModal onProjectCreate={handleProjectCreate} />}
+          {!searchQuery && <EnhancedProjectCreation onProjectCreate={handleProjectCreate} />}
         </div>
       )}
     </div>

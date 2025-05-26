@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { WorkflowBuilder } from "@/components/automation/workflow-builder"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Play,
@@ -17,125 +18,46 @@ import {
   AlertCircle,
   Zap,
   TrendingUp,
-  Plus,
-  Search,
-  Mail,
-  Database,
-  MessageSquare,
-  Calendar,
-  Shield,
 } from "lucide-react"
+import { AutomationCreationModal } from "@/components/automation/automation-creation-modal"
 
-const automationTemplates = [
-  {
-    id: "email-automation",
-    name: "Email Automation",
-    description: "Automatically process and respond to emails",
-    icon: Mail,
-    color: "bg-blue-500",
-    category: "communication",
-    complexity: "Medium",
-    triggers: ["Email Received", "Schedule"],
-    actions: ["AI Processing", "Send Response", "File Attachment"],
-  },
-  {
-    id: "data-sync",
-    name: "Data Synchronization",
-    description: "Keep data in sync between multiple systems",
-    icon: Database,
-    color: "bg-green-500",
-    category: "data",
-    complexity: "High",
-    triggers: ["Database Change", "API Webhook"],
-    actions: ["Data Transform", "API Call", "Update Records"],
-  },
-  {
-    id: "slack-notifications",
-    name: "Slack Notifications",
-    description: "Send automated notifications to Slack channels",
-    icon: MessageSquare,
-    color: "bg-purple-500",
-    category: "communication",
-    complexity: "Low",
-    triggers: ["Threshold Breach", "Schedule", "Manual"],
-    actions: ["Format Message", "Send to Slack", "Thread Reply"],
-  },
-  {
-    id: "daily-reports",
-    name: "Daily Reports",
-    description: "Generate and send daily analytics reports",
-    icon: Calendar,
-    color: "bg-orange-500",
-    category: "reporting",
-    complexity: "Medium",
-    triggers: ["Schedule"],
-    actions: ["Data Collection", "Report Generation", "Email Send"],
-  },
-  {
-    id: "security-monitoring",
-    name: "Security Monitoring",
-    description: "Monitor for security threats and respond automatically",
-    icon: Shield,
-    color: "bg-red-500",
-    category: "security",
-    complexity: "High",
-    triggers: ["Log Analysis", "Failed Login", "Anomaly Detection"],
-    actions: ["Alert Generation", "Block IP", "Escalate to Team"],
-  },
-]
-
+// Update the initial automations data to be more task-focused
 const initialAutomations = [
   {
     id: "1",
-    name: "Customer Email Responses",
-    description: "Automatically categorize and respond to customer emails",
+    name: "Email Processing",
+    description: "Automatically categorize and respond to incoming emails",
     status: "active",
-    lastRun: "5 minutes ago",
+    lastRun: "2 hours ago",
     nextRun: "Continuous",
-    runs: 1247,
-    successRate: 96.8,
-    category: "communication",
+    runs: 247,
+    successRate: 98.8,
     triggers: ["Email Received"],
-    actions: ["AI Analysis", "Auto Response"],
+    actions: ["AI Classification", "Auto Response", "Task Creation"],
   },
   {
     id: "2",
-    name: "Database Backup",
-    description: "Automated daily backup of critical databases",
+    name: "Data Backup",
+    description: "Automated daily backup of critical project data",
     status: "active",
-    lastRun: "2 hours ago",
+    lastRun: "15 minutes ago",
     nextRun: "Tomorrow at 2:00 AM",
     runs: 89,
     successRate: 100,
-    category: "data",
     triggers: ["Schedule"],
-    actions: ["Database Export", "Cloud Upload", "Verify Backup"],
+    actions: ["Data Collection", "Compression", "Cloud Upload"],
   },
   {
     id: "3",
-    name: "Server Health Alerts",
-    description: "Monitor server metrics and alert team of issues",
-    status: "active",
-    lastRun: "1 minute ago",
-    nextRun: "Continuous",
-    runs: 5432,
-    successRate: 99.2,
-    category: "monitoring",
-    triggers: ["Metric Threshold"],
-    actions: ["Slack Alert", "Email Team", "Create Ticket"],
-  },
-  {
-    id: "4",
-    name: "Lead Processing",
-    description: "Process new leads and assign to sales team",
+    name: "Lead Qualification",
+    description: "Score and qualify incoming sales leads automatically",
     status: "paused",
     lastRun: "1 day ago",
     nextRun: "Paused",
     runs: 156,
     successRate: 94.2,
-    category: "business",
-    triggers: ["Form Submit"],
-    actions: ["Lead Scoring", "CRM Update", "Assign Sales Rep"],
+    triggers: ["Form Submit", "CRM Update"],
+    actions: ["Lead Scoring", "Qualification", "Assignment"],
   },
 ]
 
@@ -143,6 +65,10 @@ export default function AutomationPage() {
   const [activeTab, setActiveTab] = useState("overview")
   const [searchQuery, setSearchQuery] = useState("")
   const [automations, setAutomations] = useState(initialAutomations)
+
+  const handleAutomationCreate = (newAutomation: any) => {
+    setAutomations((prev) => [newAutomation, ...prev])
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -170,29 +96,28 @@ export default function AutomationPage() {
     }
   }
 
-  const filteredAutomations = automations.filter((automation) =>
-    automation.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredWorkflows = automations.filter((workflow) =>
+    workflow.name.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
+        {/* Update the page title and description */}
         <div>
           <h1 className="text-3xl font-bold">Automation</h1>
           <p className="text-muted-foreground">Create and manage intelligent task automation</p>
         </div>
-        <Button className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white">
-          <Plus className="w-4 h-4 mr-2" />
-          New Automation
-        </Button>
+        <AutomationCreationModal onAutomationCreate={handleAutomationCreate} />
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        {/* Update the tabs to remove workflows */}
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="automations">Automations</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
+          <TabsTrigger value="builder">Builder</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
@@ -201,80 +126,82 @@ export default function AutomationPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                {/* Update the stats to reflect automation focus */}
                 <CardTitle className="text-sm font-medium">Total Automations</CardTitle>
                 <Zap className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{automations.length}</div>
+                <div className="text-2xl font-bold">12</div>
                 <p className="text-xs text-muted-foreground">
-                  <span className="text-green-600">+2</span> this month
+                  <span className="text-green-600">+2</span> from last month
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                {/* Update the stats to reflect automation focus */}
                 <CardTitle className="text-sm font-medium">Active Automations</CardTitle>
                 <Play className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{automations.filter((a) => a.status === "active").length}</div>
-                <p className="text-xs text-muted-foreground">Running smoothly</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Executions</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {automations.reduce((acc, a) => acc + a.runs, 0).toLocaleString()}
-                </div>
+                <div className="text-2xl font-bold">8</div>
                 <p className="text-xs text-muted-foreground">
-                  <span className="text-green-600">+15%</span> this week
+                  <span className="text-green-600">Running smoothly</span>
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg. Success Rate</CardTitle>
+                <CardTitle className="text-sm font-medium">Total Runs</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">2,326</div>
+                <p className="text-xs text-muted-foreground">
+                  <span className="text-green-600">+12%</span> from last week
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
                 <CheckCircle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {Math.round(automations.reduce((acc, a) => acc + a.successRate, 0) / automations.length)}%
-                </div>
-                <p className="text-xs text-muted-foreground">Excellent performance</p>
+                <div className="text-2xl font-bold">98.5%</div>
+                <p className="text-xs text-muted-foreground">
+                  <span className="text-green-600">+0.3%</span> improvement
+                </p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Recent Automations */}
+          {/* Recent Workflows */}
           <Card>
             <CardHeader>
-              <CardTitle>Recent Automations</CardTitle>
+              <CardTitle>Recent Workflows</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {automations.slice(0, 3).map((automation) => (
-                  <div key={automation.id} className="flex items-center justify-between p-4 border rounded-lg">
+                {automations.slice(0, 3).map((workflow) => (
+                  <div key={workflow.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-4">
-                      <div className={`w-3 h-3 rounded-full ${getStatusColor(automation.status)}`} />
+                      <div className={`w-3 h-3 rounded-full ${getStatusColor(workflow.status)}`} />
                       <div>
-                        <h3 className="font-medium">{automation.name}</h3>
-                        <p className="text-sm text-muted-foreground">{automation.description}</p>
+                        <h3 className="font-medium">{workflow.name}</h3>
+                        <p className="text-sm text-muted-foreground">{workflow.description}</p>
                         <div className="flex items-center space-x-4 mt-1">
-                          <span className="text-xs text-muted-foreground">Last run: {automation.lastRun}</span>
-                          <span className="text-xs text-muted-foreground">Success: {automation.successRate}%</span>
+                          <span className="text-xs text-muted-foreground">Last run: {workflow.lastRun}</span>
+                          <span className="text-xs text-muted-foreground">Success: {workflow.successRate}%</span>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Badge variant="outline" className="text-xs">
-                        {automation.runs} runs
+                        {workflow.runs} runs
                       </Badge>
                       <Button variant="ghost" size="sm">
                         <MoreHorizontal className="w-4 h-4" />
@@ -288,33 +215,30 @@ export default function AutomationPage() {
         </TabsContent>
 
         <TabsContent value="automations" className="space-y-6">
-          {/* Search */}
+          {/* Search and Filters */}
           <div className="flex items-center space-x-4">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input
-                placeholder="Search automations..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+            <Input
+              placeholder="Search workflows..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="max-w-sm"
+            />
             <Button variant="outline">All Status</Button>
-            <Button variant="outline">All Categories</Button>
+            <Button variant="outline">All Types</Button>
           </div>
 
-          {/* Automations List */}
+          {/* Workflows List */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {filteredAutomations.map((automation) => (
-              <Card key={automation.id} className="hover:shadow-md transition-shadow">
+            {filteredWorkflows.map((workflow) => (
+              <Card key={workflow.id} className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className={`w-3 h-3 rounded-full ${getStatusColor(automation.status)}`} />
-                      <CardTitle className="text-lg">{automation.name}</CardTitle>
+                      <div className={`w-3 h-3 rounded-full ${getStatusColor(workflow.status)}`} />
+                      <CardTitle className="text-lg">{workflow.name}</CardTitle>
                       <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                        {getStatusIcon(automation.status)}
-                        <span className="capitalize">{automation.status}</span>
+                        {getStatusIcon(workflow.status)}
+                        <span className="capitalize">{workflow.status}</span>
                       </div>
                     </div>
                     <Button variant="ghost" size="sm">
@@ -323,31 +247,31 @@ export default function AutomationPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground">{automation.description}</p>
+                  <p className="text-sm text-muted-foreground">{workflow.description}</p>
 
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-muted-foreground">Last run:</span>
-                      <p className="font-medium">{automation.lastRun}</p>
+                      <p className="font-medium">{workflow.lastRun}</p>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Next run:</span>
-                      <p className="font-medium">{automation.nextRun}</p>
+                      <p className="font-medium">{workflow.nextRun}</p>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Total runs:</span>
-                      <p className="font-medium">{automation.runs}</p>
+                      <p className="font-medium">{workflow.runs}</p>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Success rate:</span>
-                      <p className="font-medium">{automation.successRate}%</p>
+                      <p className="font-medium">{workflow.successRate}%</p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex flex-wrap gap-1">
                       <span className="text-xs text-muted-foreground">Triggers:</span>
-                      {automation.triggers.map((trigger, index) => (
+                      {workflow.triggers.map((trigger, index) => (
                         <Badge key={index} variant="outline" className="text-xs">
                           {trigger}
                         </Badge>
@@ -355,7 +279,7 @@ export default function AutomationPage() {
                     </div>
                     <div className="flex flex-wrap gap-1">
                       <span className="text-xs text-muted-foreground">Actions:</span>
-                      {automation.actions.map((action, index) => (
+                      {workflow.actions.map((action, index) => (
                         <Badge key={index} variant="secondary" className="text-xs">
                           {action}
                         </Badge>
@@ -383,78 +307,20 @@ export default function AutomationPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="templates" className="space-y-6">
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Automation Templates</h2>
-            <p className="text-muted-foreground mb-6">Get started quickly with pre-built automation templates</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {automationTemplates.map((template) => (
-              <Card key={template.id} className="hover:shadow-md transition-shadow cursor-pointer">
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className={`w-12 h-12 rounded-lg ${template.color} flex items-center justify-center`}>
-                      <template.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">{template.name}</h3>
-                      <Badge variant="outline" className="text-xs mt-1">
-                        {template.complexity}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-muted-foreground mb-4">{template.description}</p>
-
-                  <div className="space-y-2">
-                    <div className="flex flex-wrap gap-1">
-                      <span className="text-xs text-muted-foreground">Triggers:</span>
-                      {template.triggers.slice(0, 2).map((trigger) => (
-                        <Badge key={trigger} variant="outline" className="text-xs">
-                          {trigger}
-                        </Badge>
-                      ))}
-                      {template.triggers.length > 2 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{template.triggers.length - 2}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      <span className="text-xs text-muted-foreground">Actions:</span>
-                      {template.actions.slice(0, 2).map((action) => (
-                        <Badge key={action} variant="secondary" className="text-xs">
-                          {action}
-                        </Badge>
-                      ))}
-                      {template.actions.length > 2 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{template.actions.length - 2}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-
-                  <Button className="w-full mt-4" variant="outline">
-                    Use Template
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        <TabsContent value="builder" className="space-y-6">
+          <WorkflowBuilder />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Automation Performance</CardTitle>
+                <CardTitle>Workflow Performance</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64 flex items-center justify-center text-muted-foreground">
                   <TrendingUp className="w-8 h-8 mr-2" />
-                  Performance analytics would be displayed here
+                  Performance chart would be displayed here
                 </div>
               </CardContent>
             </Card>

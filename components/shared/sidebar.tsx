@@ -37,18 +37,6 @@ const navigation = [
     badge: null,
   },
   {
-    name: "AI Development",
-    href: "/ai-development",
-    icon: Code2,
-    badge: "AI",
-  },
-  {
-    name: "Visual Editor",
-    href: "/visual-editor",
-    icon: Palette,
-    badge: null,
-  },
-  {
     name: "Workflows",
     href: "/workflows",
     icon: Workflow,
@@ -59,6 +47,18 @@ const navigation = [
     href: "/automation",
     icon: Zap,
     badge: "3",
+  },
+  {
+    name: "AI Development",
+    href: "/ai-development",
+    icon: Code2,
+    badge: "AI",
+  },
+  {
+    name: "Visual Editor",
+    href: "/visual-editor",
+    icon: Palette,
+    badge: null,
   },
   {
     name: "Chat Agent",

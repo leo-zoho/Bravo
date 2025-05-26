@@ -9,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import {
   LayoutDashboard,
+  FolderOpen,
   Code2,
   Palette,
   Zap,
@@ -26,6 +27,12 @@ const navigation = [
     name: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+    badge: null,
+  },
+  {
+    name: "Projects",
+    href: "/projects",
+    icon: FolderOpen,
     badge: null,
   },
   {

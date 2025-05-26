@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { WorkflowBuilder } from "@/components/automation/workflow-builder"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-  Plus,
   Play,
   Pause,
   Settings,
@@ -20,8 +19,9 @@ import {
   Zap,
   TrendingUp,
 } from "lucide-react"
+import { WorkflowCreationModal } from "@/components/automation/workflow-creation-modal"
 
-const workflows = [
+const initialWorkflows = [
   {
     id: "1",
     name: "Daily Email Reports",
@@ -75,6 +75,11 @@ const workflows = [
 export default function AutomationPage() {
   const [activeTab, setActiveTab] = useState("overview")
   const [searchQuery, setSearchQuery] = useState("")
+  const [workflows, setWorkflows] = useState(initialWorkflows)
+
+  const handleWorkflowCreate = (newWorkflow: any) => {
+    setWorkflows((prev) => [newWorkflow, ...prev])
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -114,10 +119,7 @@ export default function AutomationPage() {
           <h1 className="text-3xl font-bold">Automation</h1>
           <p className="text-muted-foreground">Create and manage intelligent workflows and automations</p>
         </div>
-        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-          <Plus className="w-4 h-4 mr-2" />
-          New Workflow
-        </Button>
+        <WorkflowCreationModal onWorkflowCreate={handleWorkflowCreate} />
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

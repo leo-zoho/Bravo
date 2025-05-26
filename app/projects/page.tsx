@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { EnhancedProjectCreation } from "@/components/projects/enhanced-project-creation"
+import { CentralCreateHub } from "@/components/shared/central-create-hub"
+import { ProjectDefinitionModal } from "@/components/projects/project-definition-modal"
 import { ObjectChatModal } from "@/components/shared/object-chat-modal"
 import {
   Search,
@@ -31,6 +32,9 @@ import {
   MessageSquare,
   Bot,
   SearchIcon,
+  Puzzle,
+  FileCode,
+  ExternalLink,
 } from "lucide-react"
 
 const initialProjects = [
@@ -94,6 +98,36 @@ const initialProjects = [
     categoryIcon: Bot,
     categoryColor: "bg-orange-500",
   },
+  {
+    id: "5",
+    name: "UI Component Library",
+    description: "Reusable component library for design system",
+    category: "component",
+    template: "ui-library",
+    status: "active",
+    progress: 70,
+    lastModified: "4 hours ago",
+    collaborators: ["MJ", "JS"],
+    framework: "React 18",
+    features: ["Storybook", "Documentation", "Testing"],
+    categoryIcon: Puzzle,
+    categoryColor: "bg-green-500",
+  },
+  {
+    id: "6",
+    name: "Payment API Service",
+    description: "Serverless payment processing API",
+    category: "functions",
+    template: "api-endpoint",
+    status: "active",
+    progress: 55,
+    lastModified: "6 hours ago",
+    collaborators: ["JD", "JS"],
+    framework: "Node.js",
+    features: ["REST API", "Authentication", "Rate Limiting"],
+    categoryIcon: FileCode,
+    categoryColor: "bg-indigo-500",
+  },
 ]
 
 const getStatusColor = (status: string) => {
@@ -134,6 +168,13 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState(initialProjects)
   const [searchQuery, setSearchQuery] = useState("")
   const [filterCategory, setFilterCategory] = useState("all")
+  const [showProjectDefinition, setShowProjectDefinition] = useState(false)
+  const [selectedItem, setSelectedItem] = useState(null)
+
+  const handleItemSelect = (category: string, item: any) => {
+    setSelectedItem({ ...item, category })
+    setShowProjectDefinition(true)
+  }
 
   const handleProjectCreate = (newProject: any) => {
     setProjects((prev) => [newProject, ...prev])
@@ -157,6 +198,9 @@ export default function ProjectsPage() {
           setProjects((prev) => [duplicatedProject, ...prev])
         }
         break
+      case "view":
+        window.location.href = `/projects/${projectId}`
+        break
       default:
         console.log(`Action ${action} for project ${projectId}`)
     }
@@ -178,7 +222,7 @@ export default function ProjectsPage() {
           <h1 className="text-3xl font-bold">Projects</h1>
           <p className="text-muted-foreground">Manage and organize all your development projects</p>
         </div>
-        <EnhancedProjectCreation onProjectCreate={handleProjectCreate} />
+        <CentralCreateHub onItemSelect={handleItemSelect} />
       </div>
 
       {/* Stats */}
@@ -300,7 +344,7 @@ export default function ProjectsPage() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleProjectAction(project.id, "view")}>
                         <Eye className="w-4 h-4 mr-2" />
                         View
                       </DropdownMenuItem>
@@ -371,6 +415,10 @@ export default function ProjectsPage() {
                 </div>
 
                 <div className="flex items-center space-x-2 pt-2">
+                  <Button variant="outline" size="sm" onClick={() => handleProjectAction(project.id, "view")}>
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Open
+                  </Button>
                   <ObjectChatModal
                     objectType="project"
                     objectName={project.name}
@@ -382,10 +430,6 @@ export default function ProjectsPage() {
                       </Button>
                     }
                   />
-                  <Button variant="outline" size="sm">
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -400,9 +444,17 @@ export default function ProjectsPage() {
           <p className="text-muted-foreground mb-4">
             {searchQuery ? "Try adjusting your search terms" : "Create your first project to get started"}
           </p>
-          {!searchQuery && <EnhancedProjectCreation onProjectCreate={handleProjectCreate} />}
+          {!searchQuery && <CentralCreateHub onItemSelect={handleItemSelect} />}
         </div>
       )}
+
+      {/* Project Definition Modal */}
+      <ProjectDefinitionModal
+        open={showProjectDefinition}
+        onOpenChange={setShowProjectDefinition}
+        selectedItem={selectedItem}
+        onProjectCreate={handleProjectCreate}
+      />
     </div>
   )
 }

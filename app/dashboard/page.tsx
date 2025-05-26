@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -27,6 +27,9 @@ import {
   Share,
   Download,
 } from "lucide-react"
+
+import { getProjects } from "@/lib/actions/projects"
+import { getAutomations } from "@/lib/actions/automations"
 
 const projects = [
   {
@@ -135,6 +138,26 @@ const quickActions = [
 
 export default function DashboardPage() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [projectsResult, automationsResult] = await Promise.all([getProjects(), getAutomations()])
+
+        if (projectsResult.success) {
+          console.log("Loaded projects:", projectsResult.data)
+        }
+
+        if (automationsResult.success) {
+          console.log("Loaded automations:", automationsResult.data)
+        }
+      } catch (error) {
+        console.error("Error loading dashboard data:", error)
+      }
+    }
+
+    loadData()
+  }, [])
 
   const getStatusColor = (status: string) => {
     switch (status) {

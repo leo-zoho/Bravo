@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Sparkles, Play, Download, Copy, Eye, Code2, Smartphone, Globe, Database } from "lucide-react"
+import { generateCode } from "@/lib/actions/ai-generation"
 
 const frameworks = [
   { value: "react", label: "React", icon: Code2 },
@@ -54,23 +55,28 @@ export function CodeGenerator() {
     setIsGenerating(true)
     setProgress(0)
 
-    // Simulate AI generation process
-    const steps = [
-      "Analyzing requirements...",
-      "Generating component structure...",
-      "Creating UI components...",
-      "Adding styling and interactions...",
-      "Optimizing code...",
-      "Finalizing output...",
-    ]
+    try {
+      // Simulate progress updates
+      const progressInterval = setInterval(() => {
+        setProgress((prev) => Math.min(prev + 20, 90))
+      }, 500)
 
-    for (let i = 0; i < steps.length; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      setProgress((i + 1) * (100 / steps.length))
-    }
+      const result = await generateCode({
+        prompt,
+        framework: selectedFramework as "react" | "nextjs" | "react-native",
+        type: "component",
+      })
 
-    // Mock generated code
-    setGeneratedCode(`import React from 'react'
+      clearInterval(progressInterval)
+      setProgress(100)
+
+      if (result.success) {
+        setGeneratedCode(result.data.code)
+      } else {
+        console.error("Generation failed:", result.error)
+        // Fallback to mock code
+        setGeneratedCode(`// Generation failed, showing mock code
+import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
@@ -94,8 +100,14 @@ export default function GeneratedComponent() {
     </div>
   )
 }`)
-
-    setIsGenerating(false)
+      }
+    } catch (error) {
+      console.error("Error generating code:", error)
+      setGeneratedCode(`// Error generating code
+// Please try again or check your connection`)
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   const handleTemplateSelect = (template: (typeof templates)[0]) => {

@@ -70,13 +70,7 @@ export function PropertiesPanel() {
                   <Label>Text Color</Label>
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-gray-900 rounded border cursor-pointer"></div>
-                    <Input
-                      value="#1f2937"
-                      onChange={(e) => {
-                        /* handle color change */
-                      }}
-                      className="flex-1"
-                    />
+                    <Input value="#1f2937" className="flex-1" />
                   </div>
                 </div>
 
@@ -84,13 +78,7 @@ export function PropertiesPanel() {
                   <Label>Background Color</Label>
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-transparent border-2 border-dashed border-gray-300 rounded cursor-pointer"></div>
-                    <Input
-                      placeholder="transparent"
-                      onChange={(e) => {
-                        /* handle background change */
-                      }}
-                      className="flex-1"
-                    />
+                    <Input placeholder="transparent" className="flex-1" />
                   </div>
                 </div>
               </TabsContent>
@@ -99,114 +87,42 @@ export function PropertiesPanel() {
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-2">
                     <Label>X Position</Label>
-                    <Input
-                      type="number"
-                      defaultValue="50"
-                      onChange={(e) => {
-                        /* handle x position change */
-                      }}
-                    />
+                    <Input type="number" defaultValue="50" />
                   </div>
                   <div className="space-y-2">
                     <Label>Y Position</Label>
-                    <Input
-                      type="number"
-                      defaultValue="50"
-                      onChange={(e) => {
-                        /* handle y position change */
-                      }}
-                    />
+                    <Input type="number" defaultValue="50" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-2">
                     <Label>Width</Label>
-                    <Input
-                      type="number"
-                      defaultValue="200"
-                      onChange={(e) => {
-                        /* handle width change */
-                      }}
-                    />
+                    <Input type="number" defaultValue="200" />
                   </div>
                   <div className="space-y-2">
                     <Label>Height</Label>
-                    <Input
-                      type="number"
-                      defaultValue="40"
-                      onChange={(e) => {
-                        /* handle height change */
-                      }}
-                    />
+                    <Input type="number" defaultValue="40" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label>Padding</Label>
                   <div className="grid grid-cols-4 gap-1">
-                    <Input
-                      placeholder="T"
-                      className="text-center"
-                      onChange={(e) => {
-                        /* handle padding top */
-                      }}
-                    />
-                    <Input
-                      placeholder="R"
-                      className="text-center"
-                      onChange={(e) => {
-                        /* handle padding right */
-                      }}
-                    />
-                    <Input
-                      placeholder="B"
-                      className="text-center"
-                      onChange={(e) => {
-                        /* handle padding bottom */
-                      }}
-                    />
-                    <Input
-                      placeholder="L"
-                      className="text-center"
-                      onChange={(e) => {
-                        /* handle padding left */
-                      }}
-                    />
+                    <Input placeholder="T" className="text-center" />
+                    <Input placeholder="R" className="text-center" />
+                    <Input placeholder="B" className="text-center" />
+                    <Input placeholder="L" className="text-center" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label>Margin</Label>
                   <div className="grid grid-cols-4 gap-1">
-                    <Input
-                      placeholder="T"
-                      className="text-center"
-                      onChange={(e) => {
-                        /* handle margin top */
-                      }}
-                    />
-                    <Input
-                      placeholder="R"
-                      className="text-center"
-                      onChange={(e) => {
-                        /* handle margin right */
-                      }}
-                    />
-                    <Input
-                      placeholder="B"
-                      className="text-center"
-                      onChange={(e) => {
-                        /* handle margin bottom */
-                      }}
-                    />
-                    <Input
-                      placeholder="L"
-                      className="text-center"
-                      onChange={(e) => {
-                        /* handle margin left */
-                      }}
-                    />
+                    <Input placeholder="T" className="text-center" />
+                    <Input placeholder="R" className="text-center" />
+                    <Input placeholder="B" className="text-center" />
+                    <Input placeholder="L" className="text-center" />
                   </div>
                 </div>
               </TabsContent>
@@ -214,14 +130,7 @@ export function PropertiesPanel() {
               <TabsContent value="content" className="space-y-4 mt-0">
                 <div className="space-y-2">
                   <Label>Text Content</Label>
-                  <Textarea
-                    defaultValue="Welcome to Bravo"
-                    placeholder="Enter text content..."
-                    rows={3}
-                    onChange={(e) => {
-                      /* handle content change */
-                    }}
-                  />
+                  <Textarea defaultValue="Welcome to Bravo" placeholder="Enter text content..." rows={3} />
                 </div>
 
                 <div className="space-y-2">

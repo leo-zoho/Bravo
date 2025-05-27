@@ -28,6 +28,7 @@ import {
   Globe,
   Sparkles,
   Palette,
+  Target,
 } from "lucide-react"
 
 export function Header() {
@@ -91,6 +92,15 @@ export function Header() {
                   <div>
                     <p className="font-medium">AI Agent</p>
                     <p className="text-xs text-muted-foreground">Intelligent chatbot or assistant</p>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center space-x-3 p-3">
+                  <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                    <Target className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Mission</p>
+                    <p className="text-xs text-muted-foreground">Autonomous agent mission</p>
                   </div>
                 </DropdownMenuItem>
               </div>

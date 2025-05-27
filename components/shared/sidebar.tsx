@@ -21,6 +21,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
+  Target,
 } from "lucide-react"
 
 const navigation = [
@@ -35,6 +36,12 @@ const navigation = [
     href: "/projects",
     icon: FolderOpen,
     badge: null,
+  },
+  {
+    name: "Missions",
+    href: "/missions",
+    icon: Target,
+    badge: "New",
   },
   {
     name: "Workflows",
